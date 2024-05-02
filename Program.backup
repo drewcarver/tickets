@@ -1,0 +1,61 @@
+
+open System
+open System.Security.Claims
+open Microsoft.AspNetCore
+open Microsoft.AspNetCore.Builder
+open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Http
+open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Hosting
+open Microsoft.AspNetCore.Authentication.JwtBearer
+open Microsoft.IdentityModel.Tokens
+open Giraffe
+open Giraffe.EndpointRouting
+open Giraffe.ViewEngine
+
+let notLoggedIn =
+    RequestErrors.UNAUTHORIZED "Basic" "Some Realm" "You must be logged in."
+
+let mustBeLoggedIn = requiresAuthentication notLoggedIn
+
+let notFoundHandler: HttpHandler = "Not Found" |> text |> RequestErrors.notFound
+
+let endpoints =
+    [ GET [ route "/todos" (mustBeLoggedIn >=> Todo.getTodosHandler) ]
+      POST [ route "/todos" (mustBeLoggedIn >=> Todo.addTodo) ] ]
+
+let domain = "dev-fu83rki86r8dd5bd.us.auth0.com"
+
+let configureApp (appBuilder: IApplicationBuilder) =
+    appBuilder
+        .UseRouting()
+        .UseFileServer()
+        .UseGiraffe(endpoints)
+        .UseGiraffe(notFoundHandler)
+
+let configureServices (services: IServiceCollection) =
+    services.AddRouting().AddGiraffe()
+    (*.AddAuthentication(fun o ->
+            o.DefaultAuthenticateScheme <- JwtBearerDefaults.AuthenticationScheme
+            o.DefaultChallengeScheme <- JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(fun o ->
+            o.Authority <- sprintf "https://%s/" domain
+            o.TokenValidationParameters <- TokenValidationParameters(NameClaimType = ClaimTypes.NameIdentifier))
+        *)
+    |> ignore
+
+[<EntryPoint>]
+let main args =
+    let builder = WebApplication.CreateBuilder(args)
+    configureServices builder.Services
+
+    let app = builder.Build()
+
+    if app.Environment.IsDevelopment() then
+        app.UseDeveloperExceptionPage() |> ignore
+
+    configureApp app
+    app.UseAuthentication().UseAuthorization() |> ignore
+    app.Run()
+
+    0

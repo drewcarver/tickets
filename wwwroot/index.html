@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+  <head>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
+    <style>
+      .todo__list-item {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="login()">Login</button>
+    <button onclick="logout()">Logout</button>
+    <input 
+      id="todo-input" 
+      name="todo"
+      hx-post="/todos"
+      hx-trigger="keyup[key=='Enter']"
+      hx-target="#todos"
+      placeholder="Add todo..."
+    />
+    <ul id="todos" hx-trigger="load" hx-get="/todos">
+    </ul>
+  </body>
+  <script>
+    const clientID = 'kRYFKmwQiKoGQegrMTTmwRpgHoRZaByz';
+    const domain = 'dev-fu83rki86r8dd5bd.us.auth0.com'
+    const webAuth = new auth0.WebAuth({
+      domain,
+      clientID,
+      audience: 'Todo API',
+      responseType: 'token',
+      redirectUri: 'http://localhost:5000/authorize.html'
+    })
+    const authToken = sessionStorage.getItem("access_token")
+
+    const login = () => {
+      webAuth.authorize()
+    }
+
+    const logout = () => {
+      sessionStorage.removeItem('access_token')
+      webAuth.logout({ returnTo: 'http://localhost:5000', clientID });
+    }
+
+    const checkSession = () => new Promise((resolve, reject) =>
+      webAuth.checkSession({ audience: 'Todo API' }, function (err, authResult) {
+          if (err)
+          reject(err)
+          else
+          resolve(authResult)
+      }))
+
+    function isTokenExpired(token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const expirationTime = decodedToken.exp * 1000; // Convert expiration time to milliseconds
+
+      return Date.now() >= expirationTime;
+    }
+
+
+    document.body.addEventListener("htmx:confirm", (e) => {
+      const authToken = sessionStorage.getItem('access_token')
+      if(!authToken || isTokenExpired(authToken)) {
+        e.preventDefault() 
+
+        webAuth.checkSession()
+          .then(token => sessionStorage.setItem('access_token', token))
+          .then(() => e.detail.issueRequest()) 
+          .catch(() => login())
+      }
+    })
+
+    document.body.addEventListener('htmx:configRequest', function(evt) {
+      const authToken = sessionStorage.getItem("access_token")
+
+      evt.detail.headers['Authorization'] = `Bearer ${authToken}` // add a new parameter into the mix
+    });
+  </script>
+</html>
