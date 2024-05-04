@@ -2,14 +2,12 @@ module TodoRepo
 
 open FSharp.Data.Sql
 
-type Todo = { Description: string }
-
 [<Literal>]
 let resolutionPath = "/home/drew/Downloads/mysql-connector/net8.0"
 
 [<Literal>]
 let connectionString =
-    "Data Source=localhost;Initial Catalog=Todo;User ID=todo;Password=todo123"
+    "Data Source=localhost;Initial Catalog=TICKETS;User ID=ticketapp;Password=ticket123"
 
 type sql =
     SqlDataProvider<ConnectionString=connectionString, DatabaseVendor=Common.DatabaseProviderTypes.MYSQL, ResolutionPath=resolutionPath>
@@ -17,14 +15,14 @@ type sql =
 let ctx = sql.GetDataContext()
 
 let createTodo description =
-    let todo = ctx.Todo.Todo.Create()
+    let todo = ctx.Tickets.Ticket.Create()
     todo.Description <- description
 
     ctx.SubmitUpdates()
 
-let getTodos () =
+let getTickets () =
     query {
-        for todo in ctx.Todo.Todo do
-            select todo
+        for ticket in ctx.Tickets.Ticket do
+            select ticket
     }
     |> Seq.toList

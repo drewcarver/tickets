@@ -24,8 +24,8 @@ let clientId = "kRYFKmwQiKoGQegrMTTmwRpgHoRZaByz"
 let domain = "dev-fu83rki86r8dd5bd.us.auth0.com"
 
 let endpoints =
-    [ GET [ route "/todos" (mustBeLoggedIn >=> Todo.getTodosHandler) ]
-      POST [ route "/todos" (mustBeLoggedIn >=> Todo.addTodo) ] ]
+    [ GET [ route "/todos" (mustBeLoggedIn >=> htmlView (div [] [])) ]
+      POST [ route "/todos" (mustBeLoggedIn >=> htmlView (div [] [])) ] ]
 
 let configureApp (appBuilder: IApplicationBuilder) =
     appBuilder

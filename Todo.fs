@@ -11,6 +11,7 @@ open Giraffe
 open Giraffe.EndpointRouting
 open Giraffe.ViewEngine
 
+(*
 let todosList = ul [] [ li [ _class "todo__list-item" ] [ str "Clean the house" ] ]
 let emptyList = ul [] [ li [] [ str "No todos found" ] ]
 
@@ -39,3 +40,4 @@ let addTodo: HttpHandler =
             TodoRepo.createTodo todo
             ctx.WriteHtmlViewAsync(listTodos ())
         | None -> ctx.WriteHtmlViewAsync(listTodos ())
+*)
