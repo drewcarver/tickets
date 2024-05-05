@@ -43,7 +43,9 @@ let addTicketDialog =
                   [ attr "hx-post" "/tickets"
                     _class "ticket-form"
                     _formmethod "dialog"
-                    attr "hx-indicator" "#save-ticket-spinner" ]
+                    attr "hx-indicator" "#save-ticket-spinner"
+                    attr "hx-target" "#dialog-anchor"
+                    attr "hx-swap" "outerHTML" ]
                   [ input [ _required; _name "title"; _placeholder "Title" ]
                     input [ _required; _name "description"; _placeholder "Description" ]
                     input [ _required; _name "status"; _placeholder "Status" ]
@@ -55,11 +57,13 @@ let addTicketDialog =
 
     )
 
+
 let endpoints =
     [ GET [ routef "/tickets/%s" (fun ticketId -> htmlView (ticketModal ticketId)) ]
       POST [ route "/tickets" Todo.addTicket ]
       GET [ route "/tickets" Todo.listTickets ]
-      GET [ route "/show-add-dialog" addTicketDialog ] ]
+      GET [ route "/show-add-dialog" addTicketDialog ]
+      GET [ routef "/show-edit-dialog/%s" (fun ticketId -> Todo.showEditTicketDialog (int ticketId)) ] ]
 
 let configureApp (appBuilder: IApplicationBuilder) =
     appBuilder

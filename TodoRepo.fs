@@ -40,6 +40,15 @@ let createTicket (ticket: TicketDTO) =
 
     ctx.SubmitUpdatesAsync()
 
+let getTicket ticketId =
+    query {
+        for ticket in ctx.Ticket.Ticket do
+            where (ticket.TicketId = ticketId)
+
+            select ticket
+    }
+    |> Seq.head
+
 let getTickets (filter: TicketFilter) : List<Ticket> =
     let doesNotHaveStatus = filter.status.IsNone
     let doesNotHaveTitle = filter.title.IsNone

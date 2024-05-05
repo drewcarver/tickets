@@ -189,43 +189,6 @@
       </div>
     </nav>
     <main>
-      <dialog
-        id="add-ticket-dialog"
-        class="modal"
-        hx-on::after-request="document.getElementById('add-ticket-dialog').close()"
-      >
-        <header class="modal__header">
-          <h1>Test Dialog</h1>
-          <button
-            class="btn"
-            aria-label="Close"
-            onclick="document.getElementById('add-ticket-dialog').close()"
-          >
-            <i class="fa fa-times"></i>
-          </button>
-        </header>
-        <form
-          hx-post="/tickets"
-          class="ticket-form"
-          formmethod="dialog"
-          hx-swap="none"
-          hx-indicator="#save-ticket-spinner"
-        >
-          <input required name="title" placeholder="Title" />
-          <input required name="description" placeholder="Description" />
-          <input required name="status" placeholder="Status" />
-          <button type="submit">Save</button>
-        </form>
-        <div id="save-ticket-spinner" class="htmx-indicator">
-          <div class="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <p>Saving changes...</p>
-        </div>
-      </dialog>
       <h1>Board</h1>
       <div>
         <input
@@ -240,7 +203,8 @@
         <button
           class="btn"
           aria-label="Add New Ticket"
-          onclick="document.getElementById('add-ticket-dialog').showModal()"
+          hx-get="/show-add-dialog"
+          hx-target="#dialog-anchor"
         >
           <i class="fa fa-plus"></i>
         </button>
@@ -273,6 +237,7 @@
         </div>
       </div>
     </main>
+    <div id="dialog-anchor" />
   </body>
   <script>
     const clientID = "kRYFKmwQiKoGQegrMTTmwRpgHoRZaByz"

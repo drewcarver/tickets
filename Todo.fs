@@ -42,12 +42,53 @@ let addTodo: HttpHandler =
             ctx.WriteHtmlViewAsync(listTodos ())
         | None -> ctx.WriteHtmlViewAsync(listTodos ())
 *)
+let editTicketDialog (ticket: Ticket) =
+    dialog
+        [ _id "ticket-dialog"
+          _class "modal"
+          attr "hx-on::load" "document.getElementById('ticket-dialog').showModal()" ]
+        [ header
+              [ _class "modal__header" ]
+              [ h1 [] [ str "Edit Ticket" ]
+                button
+                    [ _class "btn"
+                      attr "aria-label" "Close"
+                      _onclick "document.getElementById('ticket-dialog').close()" ]
+                    [ i [ _class "fa fa-times fa-2x" ] [] ] ]
+          form
+              [ attr "hx-post" "/tickets"
+                _class "ticket-form"
+                _formmethod "dialog"
+                attr "hx-indicator" "#save-ticket-spinner"
+                attr "hx-target" "#dialog-anchor"
+                attr "hx-swap" "outerHTML" ]
+              [ input [ _required; _name "title"; _placeholder "Title"; _value ticket.Title ]
+                input
+                    [ _required
+                      _name "description"
+                      _placeholder "Description"
+                      _value ticket.Description ]
+                input [ _required; _name "status"; _placeholder "Status"; _value "Ready" ]
+                button [ _type "submit" ] [ str "Save" ] ]
+          div
+              [ _id "save-ticket-spinner"; _class "htmx-indicator" ]
+              [ div [ _class "lds-ring" ] [ div [] []; div [] []; div [] []; div [] [] ]
+                p [] [ str "Saving changes..." ] ] ]
+
 let toCard (ticket: Ticket) =
     div
-        [ _class "card" ]
+        [ _class "card"
+          attr "hx-get" $"/show-edit-dialog/{ticket.TicketId}"
+          attr "hx-trigger" "click"
+          attr "hx-target" "#dialog-anchor" ]
         [ h3 [] [ str ticket.Title ]
           p [] [ str ticket.Description ]
           p [] [ str "Ready" ] ]
+
+let showEditTicketDialog ticketId : HttpHandler =
+    let ticket = TodoRepo.getTicket ticketId
+
+    htmlView (editTicketDialog ticket)
 
 let listTickets: HttpHandler =
     fun _ ctx ->
@@ -90,5 +131,5 @@ let addTicket: HttpHandler =
 
             let! _ = createTicket (ticket)
 
-            return! ctx.WriteHtmlViewAsync(div [] [])
+            return! ctx.WriteHtmlViewAsync(div [ _id "dialog-anchor" ] [])
         }
