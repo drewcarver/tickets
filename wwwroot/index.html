@@ -204,7 +204,9 @@
           hx-post="/tickets"
           class="ticket-form"
           formmethod="dialog"
+          hx-swap="none"
           hx-indicator="#save-ticket-spinner"
+          hx-on::after-request="document.getElementById('add-ticket-dialog').close()"
         >
           <input required name="title" placeholder="Title" />
           <input required name="description" placeholder="Description" />
@@ -251,7 +253,7 @@
         class="swimlanes"
         hx-get="/tickets"
         hx-trigger="load"
-        hx-indicator="load-swim-spinner"
+        hx-indicator="#load-swim-spinner"
         hx-swap="outerHTML"
       >
         <div class="swimlanes__lane"></div>
