@@ -45,7 +45,10 @@ let addTicket: HttpHandler =
     fun _ ctx ->
         task {
             let! ticket = ctx.BindFormAsync<TodoRepo.Ticket>()
-            Console.WriteLine(ticket.Title)
+
+            let! _ = System.Threading.Tasks.Task.Delay(30 * 1000)
+            //let! _ = TodoRepo.createTicket (ticket)
+
 
             return! ctx.WriteHtmlViewAsync(div [] [])
         }

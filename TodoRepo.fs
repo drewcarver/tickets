@@ -7,7 +7,7 @@ let resolutionPath = "/home/drew/Downloads/mysql-connector/net8.0"
 
 [<Literal>]
 let connectionString =
-    "Data Source=localhost;Initial Catalog=TICKETS;User ID=ticketapp;Password=ticket123"
+    "Data Source=localhost;Initial Catalog=TICKET;User ID=ticketapp;Password=ticket123"
 
 type sql =
     SqlDataProvider<ConnectionString=connectionString, DatabaseVendor=Common.DatabaseProviderTypes.MYSQL, ResolutionPath=resolutionPath>
@@ -28,16 +28,16 @@ type TicketStatus =
 
 
 let createTicket (ticket: Ticket) =
-    let createdTicket = ctx.Tickets.Ticket.Create()
+    let createdTicket = ctx.Ticket.Ticket.Create()
     createdTicket.Title <- ticket.Title
     createdTicket.Description <- ticket.Description
     createdTicket.Status <- int TicketStatus.Ready
 
-    ctx.SubmitUpdates()
+    ctx.SubmitUpdatesAsync()
 
 let getTickets () =
     query {
-        for ticket in ctx.Tickets.Ticket do
+        for ticket in ctx.Ticket.Ticket do
             select ticket
     }
     |> Seq.toList

@@ -1,10 +1,17 @@
 <!DOCTYPE html>
+<html lang="en-US">
   <head>
+    <title>Tickets App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A ticket management application.">
+    <meta charset="UTF-8">
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
     <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/LoadingSpinner.css"/>
     <style>
   *, html {
     font-family: "Roboto", arial, san-serif;
@@ -21,6 +28,7 @@
     min-width: 10rem;
     display: flex;
     flex-direction: column;
+    color: white;
     gap: 1rem;
   }
 
@@ -33,11 +41,12 @@
     flex: 1;
   }
 
-  header {
+  .main-header {
     background-color: blue;
     border-radius: 0 0 15px 0;
     min-height: 4rem;
   }
+
   .main-menu {
     border-radius: 0 15px 0 0;
     background-color: blue;
@@ -109,11 +118,39 @@
     font-weight: bold;
   }
 
+  #add-ticket-dialog:has(.htmx-request) form {
+    display: none;
+  }
+
+  #save-ticket-spinner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn {
+    border: none;
+    padding: .5em 1em;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background-color: rgba(0, 0, 0, 0.2); 
+  }
+
+  .modal__header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
     </style>
   </head>
   <body>
     <nav>
-      <header>
+      <header class="main-header">
         <span>Logo</span>
         <span>Add</span>
         <span>Menu</span>
@@ -131,21 +168,26 @@
     </nav>
     <main>
       <dialog id="add-ticket-dialog" class="modal" open>
-        <h1>Test Dialog</h1>
-        <button onclick="document.getElementById('add-ticket-dialog').close()">X</button>
-        <form hx-post="/tickets" class="ticket-form" formmethod="dialog">
+        <header class="modal__header">
+          <h1>Test Dialog</h1>
+          <button class="btn" aria-label="Close" onclick="document.getElementById('add-ticket-dialog').close()">
+            <i class="fa fa-times"></i>
+          </button>
+        </header>
+        <form hx-post="/tickets" class="ticket-form" formmethod="dialog" hx-indicator="#save-ticket-spinner">
           <input required name="title" placeholder="Title" />
           <input required name="description" placeholder="Description" />
           <input required name="status" placeholder="Status" />
           <button type="submit">Save</button>
         </form>
+        <div id="save-ticket-spinner" class="htmx-indicator">
+          <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+          <p>Saving changes...</p>
+        </div>
       </dialog>
       <h1>Board</h1>
       <div>
         <input placeholder="Search" />
-        <select>
-          <option>Quick Filters</option>
-        </select>
       </div>
       <div class="swimlane-titles">
         <h2>Ready</h2>

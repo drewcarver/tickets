@@ -1,26 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "/home/drew/repos/htmx/htmx.fsproj": {}
+    "C:\\Users\\drewc\\Repos\\tickets\\htmx.fsproj": {}
   },
   "projects": {
-    "/home/drew/repos/htmx/htmx.fsproj": {
+    "C:\\Users\\drewc\\Repos\\tickets\\htmx.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/drew/repos/htmx/htmx.fsproj",
+        "projectUniqueName": "C:\\Users\\drewc\\Repos\\tickets\\htmx.fsproj",
         "projectName": "htmx",
-        "projectPath": "/home/drew/repos/htmx/htmx.fsproj",
-        "packagesPath": "/home/drew/.nuget/packages/",
-        "outputPath": "/home/drew/repos/htmx/obj/",
+        "projectPath": "C:\\Users\\drewc\\Repos\\tickets\\htmx.fsproj",
+        "packagesPath": "C:\\Users\\drewc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\drewc\\Repos\\tickets\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/drew/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\drewc\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "/home/drew/.dotnet/sdk/8.0.100/FSharp/library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\8.0.204\\FSharp\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -28,6 +28,11 @@
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -42,7 +47,7 @@
             "FSharp.Core": {
               "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
               "target": "Package",
-              "version": "[8.0.100, )",
+              "version": "[8.0.200, )",
               "generatePathProperty": true
             },
             "Giraffe.ViewEngine": {
@@ -53,6 +58,11 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.4, )",
+              "generatePathProperty": true
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.4.0, )",
               "generatePathProperty": true
             },
             "SQLProvider": {
@@ -82,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/drew/.dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
