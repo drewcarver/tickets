@@ -57,15 +57,36 @@ let listTickets: HttpHandler =
 
             let filter: TicketFilter = { title = title; status = status }
 
-            let cards = getTickets filter |> List.map toCard
+            let groupedTickets = getTickets filter |> List.groupBy (fun t -> t.Status)
 
-            return! ctx.WriteHtmlViewAsync(div [ _class "swimlanes__lane" ] cards)
+            let getTicketCardsByStatus status =
+                groupedTickets
+                |> List.filter (fun t -> fst t = status)
+                |> List.tryHead
+                |> Option.map snd
+                |> Option.map (List.map toCard)
+                |> Option.defaultValue []
+
+            let readyCards = getTicketCardsByStatus (int TicketStatus.Ready)
+            let inProgressCards = getTicketCardsByStatus (int TicketStatus.InProgress)
+            let testingCards = getTicketCardsByStatus (int TicketStatus.Testing)
+            let doneCards = getTicketCardsByStatus (int TicketStatus.Done)
+
+            return!
+                ctx.WriteHtmlViewAsync(
+                    div
+                        [ _class "swimlanes" ]
+                        [ div [ _class "swimlanes__lane" ] readyCards
+                          div [ _class "swimlanes__lane" ] inProgressCards
+                          div [ _class "swimlanes__lane" ] testingCards
+                          div [ _class "swimlanes__lane" ] doneCards ]
+                )
         }
 
 let addTicket: HttpHandler =
     fun _ ctx ->
         task {
-            let! ticket = ctx.BindFormAsync<TodoRepo.Ticket>()
+            let! ticket = ctx.BindFormAsync<TicketDTO>()
 
             let! _ = createTicket (ticket)
 

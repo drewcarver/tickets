@@ -25,24 +25,29 @@ type TicketFilter =
       title: string option }
 
 [<CLIMutable>]
+type TicketDTO =
+    { title: string
+      description: string
+      status: string }
+
 type Ticket = sql.dataContext.``ticket.ticketEntity``
 
-let createTicket (ticket: Ticket) =
+let createTicket (ticket: TicketDTO) =
     let createdTicket = ctx.Ticket.Ticket.Create()
-    createdTicket.Title <- ticket.Title
-    createdTicket.Description <- ticket.Description
+    createdTicket.Title <- ticket.title
+    createdTicket.Description <- ticket.description
     createdTicket.Status <- int TicketStatus.Ready
 
     ctx.SubmitUpdatesAsync()
 
-let getTickets (filter) : List<Ticket> =
+let getTickets (filter: TicketFilter) : List<Ticket> =
     let doesNotHaveStatus = filter.status.IsNone
     let doesNotHaveTitle = filter.title.IsNone
 
     query {
         for ticket in ctx.Ticket.Ticket do
             where (doesNotHaveStatus || ticket.Status = filter.status.Value)
-            where (doesNotHaveTitle || ticket.Title = filter.title.Value)
+            where (doesNotHaveTitle || ticket.Title.Contains(filter.title.Value))
 
             select ticket
     }

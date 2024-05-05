@@ -2,159 +2,172 @@
 <html lang="en-US">
   <head>
     <title>Tickets App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A ticket management application.">
-    <meta charset="UTF-8">
-    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A ticket management application." />
+    <meta charset="UTF-8" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.10"
+      integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/LoadingSpinner.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/LoadingSpinner.css" />
     <style>
-  *, html {
-    font-family: "Roboto", arial, san-serif;
-  }
+      *,
+      html {
+        font-family: "Roboto", arial, san-serif;
+      }
 
-  body {
-    display: flex; 
-    min-height: 100vh;
-    margin: 0;
-    background-color: #F1F1F1;
-  }
+      body {
+        display: flex;
+        min-height: 100vh;
+        margin: 0;
+      }
 
-  nav {
-    min-width: 10rem;
-    display: flex;
-    flex-direction: column;
-    color: white;
-    gap: 1rem;
-  }
+      nav {
+        min-width: 10rem;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        gap: 1rem;
+      }
 
-  main {
-    display: flex;
-    flex-direction: column;
-    padding: 0 1rem;
-    overflow: auto;
-    max-height: 100vh;
-    flex: 1;
-  }
+      main {
+        display: flex;
+        flex-direction: column;
+        padding: 0 1rem;
+        overflow: auto;
+        max-height: 100vh;
+        flex: 1;
+      }
 
-  .main-header {
-    background-color: blue;
-    border-radius: 0 0 15px 0;
-    min-height: 4rem;
-  }
+      .main-header {
+        background-color: blue;
+        border-radius: 0 0 15px 0;
+        min-height: 4rem;
+      }
 
-  .main-menu {
-    border-radius: 0 15px 0 0;
-    background-color: blue;
-    flex: 1 auto;
-    margin: 0;
-  }
-  
-  .swimlanes {
-    display: flex;
-  }
+      .main-menu {
+        border-radius: 0 15px 0 0;
+        background-color: blue;
+        flex: 1 auto;
+        margin: 0;
+      }
 
-  .swimlanes__lane {
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0 10px;
-    border-right: 1px lightgray solid;
-  }
+      .swimlanes {
+        display: flex;
+        min-height: 70%;
+      }
 
-  .swimlanes__lane:last-child {
-    border-right: none;
-  }
-  
-  .swimlane-titles {
-    display: flex;
-  }
+      .swimlanes__lane {
+        width: 25%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0 10px;
+        border-right: 1px lightgray solid;
+      }
 
-  .swimlane-titles h2 {
-    padding-left: 8px;
-    width: 25%;
-  }
+      .swimlanes__lane:last-child {
+        border-right: none;
+      }
 
-  .card {
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 20px;
-  }
+      .swimlane-titles {
+        display: flex;
+      }
 
-  .card:hover {
-    transform: scale(1.05);
-    transition: .25s;
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-  }
+      .swimlane-titles h2 {
+        padding-left: 8px;
+        width: 25%;
+      }
 
-  .modal {
-    position: fixed;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px 6px rgba(0,0,0,0.2);
-    min-height: 500px;
-    z-index: 100;
-    min-width: 50%;
-  }
+      .card {
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 20px;
+      }
 
-  dialog::backdrop {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    background: rgba(0, 0, 0, 0.1);
-  }
+      .card:hover {
+        transform: scale(1.05);
+        transition: 0.25s;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+      }
 
-  .ticket-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+      .modal {
+        position: fixed;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 6px rgba(0, 0, 0, 0.2);
+        min-height: 500px;
+        z-index: 100;
+        min-width: 50%;
+      }
 
-  input {
-    border-radius: 15px;
-    border: 1px lightgray solid;
-    padding: 1em;
-    font-size: 1rem;
-    font-weight: bold;
-  }
+      dialog::backdrop {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        background: rgba(0, 0, 0, 0.1);
+      }
 
-  #add-ticket-dialog:has(.htmx-request) form {
-    display: none;
-  }
+      .ticket-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
 
-  #save-ticket-spinner {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+      input {
+        border-radius: 15px;
+        border: 1px lightgray solid;
+        padding: 1em;
+        font-size: 1rem;
+        font-weight: bold;
+      }
 
-  .btn {
-    border: none;
-    padding: .5em 1em;
-    border-radius: 15px;
-    cursor: pointer;
-  }
+      #add-ticket-dialog:has(.htmx-request) form {
+        display: none;
+      }
 
-  .btn:hover {
-    background-color: rgba(0, 0, 0, 0.2); 
-  }
+      #save-ticket-spinner {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
 
-  .modal__header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
+      .btn {
+        border: none;
+        padding: 0.5em 1em;
+        border-radius: 15px;
+        cursor: pointer;
+      }
 
+      .btn:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      .modal__header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
     </style>
   </head>
   <body>
@@ -173,31 +186,57 @@
           <li>Components</li>
           <li>Issues</li>
         </ul>
-      </div>  
+      </div>
     </nav>
     <main>
       <dialog id="add-ticket-dialog" class="modal">
         <header class="modal__header">
           <h1>Test Dialog</h1>
-          <button class="btn" aria-label="Close" onclick="document.getElementById('add-ticket-dialog').close()">
+          <button
+            class="btn"
+            aria-label="Close"
+            onclick="document.getElementById('add-ticket-dialog').close()"
+          >
             <i class="fa fa-times"></i>
           </button>
         </header>
-        <form hx-post="/tickets" class="ticket-form" formmethod="dialog" hx-indicator="#save-ticket-spinner">
+        <form
+          hx-post="/tickets"
+          class="ticket-form"
+          formmethod="dialog"
+          hx-indicator="#save-ticket-spinner"
+        >
           <input required name="title" placeholder="Title" />
           <input required name="description" placeholder="Description" />
           <input required name="status" placeholder="Status" />
           <button type="submit">Save</button>
         </form>
         <div id="save-ticket-spinner" class="htmx-indicator">
-          <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+          <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
           <p>Saving changes...</p>
         </div>
       </dialog>
       <h1>Board</h1>
       <div>
-        <input placeholder="Search" />
-        <button class="btn" aria-label="Add New Ticket" onclick="document.getElementById('add-ticket-dialog').showModal()">
+        <input
+          type="search"
+          name="title"
+          placeholder="Search"
+          hx-get="/tickets"
+          hx-trigger="search, keyup delay:200ms changed"
+          hx-target=".swimlanes"
+          hx-swap="outerHTML"
+        />
+        <button
+          class="btn"
+          aria-label="Add New Ticket"
+          onclick="document.getElementById('add-ticket-dialog').showModal()"
+        >
           <i class="fa fa-plus"></i>
         </button>
       </div>
@@ -207,62 +246,38 @@
         <h2>Testing</h2>
         <h2>Done</h2>
       </div>
-      <div class="swimlanes">
-        <div class="swimlanes__lane" hx-get="/tickets?status=1" hx-trigger="load" hx-swap="outerHTML">
-          <div id="load-swim-spinner" class="htmx-indicator">
-            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-          </div>
-        </div>
-        <div class="swimlanes__lane">
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-        </div>
-        <div class="swimlanes__lane">
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-        </div>
-        <div class="swimlanes__lane">
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-        </div>
+      <div
+        id="swimlanes"
+        class="swimlanes"
+        hx-get="/tickets"
+        hx-trigger="load"
+        hx-indicator="load-swim-spinner"
+        hx-swap="outerHTML"
+      >
+        <div class="swimlanes__lane"></div>
+        <div class="swimlanes__lane"></div>
+        <div class="swimlanes__lane"></div>
+        <div class="swimlanes__lane"></div>
       </div>
-      <div>
+      <div id="load-swim-spinner" class="htmx-indicator">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </div>
     </main>
   </body>
   <script>
-    const clientID = 'kRYFKmwQiKoGQegrMTTmwRpgHoRZaByz';
-    const domain = 'dev-fu83rki86r8dd5bd.us.auth0.com'
+    const clientID = "kRYFKmwQiKoGQegrMTTmwRpgHoRZaByz"
+    const domain = "dev-fu83rki86r8dd5bd.us.auth0.com"
     const webAuth = new auth0.WebAuth({
       domain,
       clientID,
-      audience: 'Todo API',
-      responseType: 'token',
-      redirectUri: 'http://localhost:5000/authorize.html'
+      audience: "Todo API",
+      responseType: "token",
+      redirectUri: "http://localhost:5000/authorize.html",
     })
     const authToken = sessionStorage.getItem("access_token")
 
@@ -271,34 +286,36 @@
     }
 
     const logout = () => {
-      sessionStorage.removeItem('access_token')
-      webAuth.logout({ returnTo: 'http://localhost:5000', clientID });
+      sessionStorage.removeItem("access_token")
+      webAuth.logout({ returnTo: "http://localhost:5000", clientID })
     }
 
-    const checkSession = () => new Promise((resolve, reject) =>
-      webAuth.checkSession({ audience: 'Todo API' }, function (err, authResult) {
-          if (err)
-          reject(err)
-          else
-          resolve(authResult)
-      }))
+    const checkSession = () =>
+      new Promise((resolve, reject) =>
+        webAuth.checkSession(
+          { audience: "Todo API" },
+          function (err, authResult) {
+            if (err) reject(err)
+            else resolve(authResult)
+          }
+        )
+      )
 
     function isTokenExpired(token) {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      const expirationTime = decodedToken.exp * 1000; // Convert expiration time to milliseconds
+      const decodedToken = JSON.parse(atob(token.split(".")[1]))
+      const expirationTime = decodedToken.exp * 1000 // Convert expiration time to milliseconds
 
-      return Date.now() >= expirationTime;
+      return Date.now() >= expirationTime
     }
-
 
     // document.body.addEventListener("htmx:confirm", (e) => {
     //   const authToken = sessionStorage.getItem('access_token')
     //   if(!authToken || isTokenExpired(authToken)) {
-    //     e.preventDefault() 
+    //     e.preventDefault()
     //
     //     webAuth.checkSession()
     //       .then(token => sessionStorage.setItem('access_token', token))
-    //       .then(() => e.detail.issueRequest()) 
+    //       .then(() => e.detail.issueRequest())
     //       .catch(() => login())
     //   }
     // })
