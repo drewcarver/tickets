@@ -14,9 +14,24 @@ type sql =
 
 let ctx = sql.GetDataContext()
 
-let createTodo description =
-    let todo = ctx.Tickets.Ticket.Create()
-    todo.Description <- description
+[<CLIMutable>]
+type Ticket =
+    { Title: string
+      Description: string
+      Status: string }
+
+type TicketStatus =
+    | Ready = 1
+    | InProgress = 2
+    | Testing = 3
+    | Done = 4
+
+
+let createTicket (ticket: Ticket) =
+    let createdTicket = ctx.Tickets.Ticket.Create()
+    createdTicket.Title <- ticket.Title
+    createdTicket.Description <- ticket.Description
+    createdTicket.Status <- int TicketStatus.Ready
 
     ctx.SubmitUpdates()
 

@@ -41,3 +41,11 @@ let addTodo: HttpHandler =
             ctx.WriteHtmlViewAsync(listTodos ())
         | None -> ctx.WriteHtmlViewAsync(listTodos ())
 *)
+let addTicket: HttpHandler =
+    fun _ ctx ->
+        task {
+            let! ticket = ctx.BindFormAsync<TodoRepo.Ticket>()
+            Console.WriteLine(ticket.Title)
+
+            return! ctx.WriteHtmlViewAsync(div [] [])
+        }

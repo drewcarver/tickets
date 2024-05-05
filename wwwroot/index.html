@@ -14,6 +14,7 @@
     display: flex; 
     min-height: 100vh;
     margin: 0;
+    background-color: #F1F1F1;
   }
 
   nav {
@@ -24,12 +25,12 @@
   }
 
   main {
-    background-color: #F1F1F1;
     display: flex;
     flex-direction: column;
     padding: 0 1rem;
     overflow: auto;
     max-height: 100vh;
+    flex: 1;
   }
 
   header {
@@ -56,6 +57,10 @@
     padding: 0 10px;
     border-right: 1px lightgray solid;
   }
+
+  .swimlanes__lane:last-child {
+    border-right: none;
+  }
   
   .swimlane-titles {
     display: flex;
@@ -80,6 +85,30 @@
     cursor: pointer;
   }
 
+  .modal {
+    position: absolute;
+    top: 25%;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 6px rgba(0,0,0,0.2);
+    min-height: 500px;
+    min-width: 50%;
+  }
+
+  .ticket-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  input {
+    border-radius: 15px;
+    border: 1px lightgray solid;
+    padding: 1em;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
     </style>
   </head>
   <body>
@@ -101,6 +130,16 @@
       </div>  
     </nav>
     <main>
+      <dialog id="add-ticket-dialog" class="modal" open>
+        <h1>Test Dialog</h1>
+        <button onclick="document.getElementById('add-ticket-dialog').close()">X</button>
+        <form hx-post="/tickets" class="ticket-form" formmethod="dialog">
+          <input required name="title" placeholder="Title" />
+          <input required name="description" placeholder="Description" />
+          <input required name="status" placeholder="Status" />
+          <button type="submit">Save</button>
+        </form>
+      </dialog>
       <h1>Board</h1>
       <div>
         <input placeholder="Search" />
@@ -116,7 +155,7 @@
       </div>
       <div class="swimlanes">
         <div class="swimlanes__lane">
-          <div class="card">
+          <div class="card" hx-target="body" hx-swap="afterbegin" hx-trigger="click" hx-get="/tickets/1">
             <h3>Create a Ticket App</h2>
             <p>Need to create a ticket app for my presentation.</p>
             <p>Assignee: Drew</p>
@@ -225,22 +264,22 @@
     }
 
 
-    document.body.addEventListener("htmx:confirm", (e) => {
-      const authToken = sessionStorage.getItem('access_token')
-      if(!authToken || isTokenExpired(authToken)) {
-        e.preventDefault() 
-
-        webAuth.checkSession()
-          .then(token => sessionStorage.setItem('access_token', token))
-          .then(() => e.detail.issueRequest()) 
-          .catch(() => login())
-      }
-    })
-
-    document.body.addEventListener('htmx:configRequest', function(evt) {
-      const authToken = sessionStorage.getItem("access_token")
-
-      evt.detail.headers['Authorization'] = `Bearer ${authToken}` // add a new parameter into the mix
-    });
+    // document.body.addEventListener("htmx:confirm", (e) => {
+    //   const authToken = sessionStorage.getItem('access_token')
+    //   if(!authToken || isTokenExpired(authToken)) {
+    //     e.preventDefault() 
+    //
+    //     webAuth.checkSession()
+    //       .then(token => sessionStorage.setItem('access_token', token))
+    //       .then(() => e.detail.issueRequest()) 
+    //       .catch(() => login())
+    //   }
+    // })
+    //
+    // document.body.addEventListener('htmx:configRequest', function(evt) {
+    //   const authToken = sessionStorage.getItem("access_token")
+    //
+    //   evt.detail.headers['Authorization'] = `Bearer ${authToken}` // add a new parameter into the mix
+    // });
   </script>
 </html>
