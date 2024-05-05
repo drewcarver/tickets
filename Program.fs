@@ -30,7 +30,7 @@ let addTicketDialog =
         dialog
             [ _id "add-ticket-dialog"
               _class "modal"
-              attr "hx-on:htmx:load" "document.getElementById('add-ticket-dialog').showModal()" ]
+              attr "hx-on::load" "document.getElementById('add-ticket-dialog').showModal()" ]
             [ header
                   [ _class "modal__header" ]
                   [ h1 [] [ str "Add Ticket" ]
