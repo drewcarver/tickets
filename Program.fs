@@ -27,7 +27,8 @@ let ticketModal ticketId = dialog [] [ h1 [] [ str "Test" ] ]
 
 let endpoints =
     [ GET [ routef "/tickets/%s" (fun ticketId -> htmlView (ticketModal ticketId)) ]
-      POST [ route "/tickets" Todo.addTicket ] ]
+      POST [ route "/tickets" Todo.addTicket ]
+      GET [ route "/tickets" Todo.listTickets ] ]
 
 let configureApp (appBuilder: IApplicationBuilder) =
     appBuilder

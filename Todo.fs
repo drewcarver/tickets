@@ -10,6 +10,7 @@ open Microsoft.Extensions.Hosting
 open Giraffe
 open Giraffe.EndpointRouting
 open Giraffe.ViewEngine
+open TodoRepo
 
 (*
 let todosList = ul [] [ li [ _class "todo__list-item" ] [ str "Clean the house" ] ]
@@ -41,14 +42,32 @@ let addTodo: HttpHandler =
             ctx.WriteHtmlViewAsync(listTodos ())
         | None -> ctx.WriteHtmlViewAsync(listTodos ())
 *)
+let toCard (ticket: Ticket) =
+    div
+        [ _class "card" ]
+        [ h3 [] [ str ticket.Title ]
+          p [] [ str ticket.Description ]
+          p [] [ str "Ready" ] ]
+
+let listTickets: HttpHandler =
+    fun _ ctx ->
+        task {
+            let status = ctx.GetQueryStringValue("status") |> Result.toOption |> Option.map int
+            let title = ctx.GetQueryStringValue("title") |> Result.toOption
+
+            let filter: TicketFilter = { title = title; status = status }
+
+            let cards = getTickets filter |> List.map toCard
+
+            return! ctx.WriteHtmlViewAsync(div [ _class "swimlanes__lane" ] cards)
+        }
+
 let addTicket: HttpHandler =
     fun _ ctx ->
         task {
             let! ticket = ctx.BindFormAsync<TodoRepo.Ticket>()
 
-            let! _ = System.Threading.Tasks.Task.Delay(30 * 1000)
-            //let! _ = TodoRepo.createTicket (ticket)
-
+            let! _ = createTicket (ticket)
 
             return! ctx.WriteHtmlViewAsync(div [] [])
         }

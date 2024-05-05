@@ -95,13 +95,22 @@
   }
 
   .modal {
-    position: absolute;
-    top: 25%;
+    position: fixed;
     border: none;
     border-radius: 15px;
     box-shadow: 0 5px 6px rgba(0,0,0,0.2);
     min-height: 500px;
+    z-index: 100;
     min-width: 50%;
+  }
+
+  dialog::backdrop {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.1);
   }
 
   .ticket-form {
@@ -167,7 +176,7 @@
       </div>  
     </nav>
     <main>
-      <dialog id="add-ticket-dialog" class="modal" open>
+      <dialog id="add-ticket-dialog" class="modal">
         <header class="modal__header">
           <h1>Test Dialog</h1>
           <button class="btn" aria-label="Close" onclick="document.getElementById('add-ticket-dialog').close()">
@@ -188,6 +197,9 @@
       <h1>Board</h1>
       <div>
         <input placeholder="Search" />
+        <button class="btn" aria-label="Add New Ticket" onclick="document.getElementById('add-ticket-dialog').showModal()">
+          <i class="fa fa-plus"></i>
+        </button>
       </div>
       <div class="swimlane-titles">
         <h2>Ready</h2>
@@ -196,36 +208,9 @@
         <h2>Done</h2>
       </div>
       <div class="swimlanes">
-        <div class="swimlanes__lane">
-          <div class="card" hx-target="body" hx-swap="afterbegin" hx-trigger="click" hx-get="/tickets/1">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
-          </div>
-          <div class="card">
-            <h3>Create a Ticket App</h2>
-            <p>Need to create a ticket app for my presentation.</p>
-            <p>Assignee: Drew</p>
+        <div class="swimlanes__lane" hx-get="/tickets?status=1" hx-trigger="load" hx-swap="outerHTML">
+          <div id="load-swim-spinner" class="htmx-indicator">
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
           </div>
         </div>
         <div class="swimlanes__lane">

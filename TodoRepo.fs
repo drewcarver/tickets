@@ -14,18 +14,18 @@ type sql =
 
 let ctx = sql.GetDataContext()
 
-[<CLIMutable>]
-type Ticket =
-    { Title: string
-      Description: string
-      Status: string }
-
 type TicketStatus =
     | Ready = 1
     | InProgress = 2
     | Testing = 3
     | Done = 4
 
+type TicketFilter =
+    { status: int option
+      title: string option }
+
+[<CLIMutable>]
+type Ticket = sql.dataContext.``ticket.ticketEntity``
 
 let createTicket (ticket: Ticket) =
     let createdTicket = ctx.Ticket.Ticket.Create()
@@ -35,9 +35,15 @@ let createTicket (ticket: Ticket) =
 
     ctx.SubmitUpdatesAsync()
 
-let getTickets () =
+let getTickets (filter) : List<Ticket> =
+    let doesNotHaveStatus = filter.status.IsNone
+    let doesNotHaveTitle = filter.title.IsNone
+
     query {
         for ticket in ctx.Ticket.Ticket do
+            where (doesNotHaveStatus || ticket.Status = filter.status.Value)
+            where (doesNotHaveTitle || ticket.Title = filter.title.Value)
+
             select ticket
     }
     |> Seq.toList
