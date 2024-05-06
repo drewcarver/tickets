@@ -26,9 +26,10 @@ type TicketFilter =
 
 [<CLIMutable>]
 type TicketDTO =
-    { title: string
+    { ticketId: int
+      title: string
       description: string
-      status: string }
+      status: int }
 
 type Ticket = sql.dataContext.``ticket.ticketEntity``
 
@@ -36,7 +37,7 @@ let createTicket (ticket: TicketDTO) =
     let createdTicket = ctx.Ticket.Ticket.Create()
     createdTicket.Title <- ticket.title
     createdTicket.Description <- ticket.description
-    createdTicket.Status <- int TicketStatus.Ready
+    createdTicket.Status <- ticket.status
 
     ctx.SubmitUpdatesAsync()
 
@@ -61,3 +62,11 @@ let getTickets (filter: TicketFilter) : List<Ticket> =
             select ticket
     }
     |> Seq.toList
+
+let updateTicket (ticket: TicketDTO) ticketId =
+    let existingTicket = getTicket ticketId
+    existingTicket.Title <- ticket.title
+    existingTicket.Description <- ticket.description
+    existingTicket.Status <- ticket.status
+
+    ctx.SubmitUpdatesAsync()
