@@ -31,7 +31,7 @@ let toDialog title innerContent =
               [ _class "modal__header" ]
               [ h1 [] [ str title ]
                 button
-                    [ _class "btn"
+                    [ _class "close-btn"
                       attr "aria-label" "Close"
                       _onclick "document.getElementById('ticket-dialog').close()" ]
                     [ i [ _class "fa fa-times fa-2x" ] [] ] ]
@@ -91,7 +91,7 @@ let editTicketForm (ticket: Ticket) =
                 _placeholder "Description"
                 _value ticket.Description ]
           toSelect [ _name "status" ] statusKeyValuePairs (string ticket.Status |> Some)
-          button [ _type "submit" ] [ str "Save" ] ]
+          button [ _type "submit"; _class "btn" ] [ str "Save" ] ]
 
 let addTicketForm =
     form
@@ -104,4 +104,4 @@ let addTicketForm =
         [ input [ _required; _name "title"; _placeholder "Title" ]
           input [ _required; _name "description"; _placeholder "Description" ]
           toSelect [ _name "status" ] statusKeyValuePairs None
-          button [ _type "submit" ] [ str "Save" ] ]
+          button [ _type "submit"; _class "btn save-btn" ] [ str "Save" ] ]
