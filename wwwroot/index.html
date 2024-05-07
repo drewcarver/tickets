@@ -24,8 +24,16 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/LoadingSpinner.css" />
     <style>
+      :root {
+        --main-blue: #0050c0;
+      }
+
       *,
       html {
         font-family: "Roboto", arial, san-serif;
@@ -38,7 +46,7 @@
       }
 
       nav {
-        min-width: 10rem;
+        min-width: 15rem;
         display: flex;
         flex-direction: column;
         color: white;
@@ -55,21 +63,49 @@
       }
 
       .main-header {
-        background-color: blue;
+        background-color: var(--main-blue);
         border-radius: 0 0 15px 0;
-        min-height: 4rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5em;
+      }
+
+      .main-header__actions {
+        display: flex;
+        gap: 0.25rem;
       }
 
       .main-menu {
         border-radius: 0 15px 0 0;
-        background-color: blue;
+        background-color: var(--main-blue);
         flex: 1 auto;
         margin: 0;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .main-menu ul {
+        list-style-type: none;
+        padding: 0;
+        flex: 1;
+
+        & li {
+          text-indent: 0;
+          font-size: 1.25rem;
+          padding: 0.5em;
+        }
+
+        & li:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+          cursor: pointer;
+        }
       }
 
       .swimlanes {
         display: flex;
-        min-height: 70%;
       }
 
       .swimlanes__lane {
@@ -169,24 +205,83 @@
         display: flex;
         justify-content: space-between;
       }
+
+      .avatar {
+        width: 3em;
+        height: 3em;
+        display: block;
+        border-radius: 50%;
+        background-color: yellow;
+      }
+
+      .main-menu__team-profile {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .team-profile__description p {
+        margin: 0;
+      }
+
+      .team-profile__team-name {
+        font-weight: bold;
+      }
+
+      .team-profile__team-type {
+        font-size: 12px;
+      }
+
+      .main-menu__user-profile {
+        justify-self: flex-end;
+        background-color: white;
+        border-radius: 15px;
+        padding: 1em 1.5em;
+        color: black;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        & .fa-chevron-right {
+          color: var(--main-blue);
+        }
+      }
     </style>
   </head>
   <body>
     <nav>
       <header class="main-header">
         <span>Logo</span>
-        <span>Add</span>
-        <span>Menu</span>
+        <div class="main-header__actions">
+          <i class="bx bx-plus bx-md"></i>
+          <i class="bx bxs-grid bx-md"></i>
+        </div>
       </header>
       <div class="main-menu">
-        <span>Avatar</span>
+        <div class="main-menu__team-profile">
+          <span class="avatar"></span>
+          <div class="team-profile__description">
+            <p class="team-profile__team-name">Teams in Space</p>
+            <p class="team-profile__team-type">Software project</p>
+          </div>
+        </div>
         <ul>
-          <li>Backlog</li>
-          <li>Reports</li>
-          <li>Releases</li>
-          <li>Components</li>
-          <li>Issues</li>
+          <li><i class="fa fa-table-cells-large"></i> Backlog</li>
+          <li><i class="fa fa-table-cells"></i> Board</li>
+          <li><i class="bx bxs-report"></i> Reports</li>
+          <li><i class="fa fa-ship"></i> Releases</li>
+          <li><i class="fa fa-box"></i> Components</li>
+          <li><i class="fa fa-bug"></i> Issues</li>
         </ul>
+        <div class="main-menu__user-profile">
+          <span class="avatar"></span>
+          <div class="team-profile__description">
+            <p class="team-profile__team-name">Andrew Carver</p>
+            <p class="team-profile__team-type">drew.carver@outlook.com</p>
+          </div>
+          <i class="fa fa-chevron-right"></i>
+        </div>
       </div>
     </nav>
     <main>
