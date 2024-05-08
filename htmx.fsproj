@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="TodoRepo.fs" />
+    <Compile Include="TicketRepo.fs" />
     <Compile Include="HtmlHelpers.fs" />
-    <Compile Include="Todo.fs" />
+    <Compile Include="Ticket.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

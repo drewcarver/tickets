@@ -91,7 +91,7 @@ let editTicketForm (ticket: Ticket) =
                 _placeholder "Description"
                 _value ticket.Description ]
           toSelect [ _name "status" ] statusKeyValuePairs (string ticket.Status |> Some)
-          button [ _type "submit"; _class "btn" ] [ str "Save" ] ]
+          button [ _type "submit"; _class "btn save-btn" ] [ str "Save" ] ]
 
 let addTicketForm =
     form

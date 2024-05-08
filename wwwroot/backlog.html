@@ -37,12 +37,6 @@
       *,
       html {
         font-family: "Roboto", arial, san-serif;
-        box-sizing: border-box;
-      }
-
-      select {
-        padding: 1em;
-        border-radius: 15px;
       }
 
       body {
@@ -99,28 +93,14 @@
 
         & li {
           text-indent: 0;
-          font-size: 1rem;
-          padding: 0.5em 0;
-        }
-
-        & li i {
-          width: 48px;
-          text-align: center;
-        }
-
-        & li span {
-          padding-left: 1em;
+          font-size: 1.25rem;
+          padding: 0.5em;
         }
 
         & li:hover {
           background-color: rgba(255, 255, 255, 0.1);
           border-radius: 15px;
           cursor: pointer;
-        }
-
-        & a {
-          text-decoration: none;
-          color: white;
         }
       }
 
@@ -240,11 +220,11 @@
         display: flex;
         align-items: center;
         gap: 1rem;
+        margin-bottom: 1.5rem;
       }
 
       .team-profile__description p {
         margin: 0;
-        margin-left: 4px;
       }
 
       .team-profile__team-name {
@@ -295,151 +275,6 @@
     </style>
   </head>
   <body>
-    <nav>
-      <header class="main-header">
-        <span>Logo</span>
-        <div class="main-header__actions">
-          <i class="bx bx-plus bx-md"></i>
-          <i class="bx bxs-grid bx-md"></i>
-        </div>
-      </header>
-      <div class="main-menu">
-        <div class="main-menu__team-profile">
-          <img class="avatar" src="/Avatar.png" />
-          <div class="team-profile__description">
-            <p class="team-profile__team-name">Teams in Space</p>
-            <p class="team-profile__team-type">Software project</p>
-          </div>
-        </div>
-        <ul hx-boost="true">
-          <li>
-            <a href="/backlog.html">
-              <i class="fa fa-table-cells-large"></i>
-              <span>Backlog</span>
-            </a>
-          </li>
-          <li><i class="fa fa-table-cells"></i> <span>Board</span></li>
-          <li><i class="bx bxs-report"></i> <span>Reports</span></li>
-          <li><i class="fa fa-ship"></i> <span>Releases</span></li>
-          <li><i class="fa fa-box"></i> <span>Components</span></li>
-          <li><i class="fa fa-bug"></i> <span>Issues</span></li>
-        </ul>
-        <div class="main-menu__user-profile">
-          <img class="avatar" src="/Avatar.png" />
-          <div class="team-profile__description">
-            <p class="team-profile__team-name">Andrew Carver</p>
-            <p class="team-profile__team-type">drew.carver@outlook.com</p>
-          </div>
-          <i class="fa fa-chevron-right"></i>
-        </div>
-      </div>
-    </nav>
-    <main>
-      <h1>Board</h1>
-      <div>
-        <input
-          type="search"
-          name="title"
-          placeholder="Search"
-          hx-get="/tickets"
-          hx-trigger="search, keyup delay:200ms changed"
-          hx-target=".swimlanes"
-          hx-swap="outerHTML"
-        />
-        <button
-          class="btn"
-          aria-label="Add New Ticket"
-          hx-get="/show-add-dialog"
-          hx-target="#dialog-anchor"
-        >
-          <i class="fa fa-plus"></i>
-        </button>
-      </div>
-      <div class="swimlane-titles">
-        <h2>Ready</h2>
-        <h2>In Progress</h2>
-        <h2>Testing</h2>
-        <h2>Done</h2>
-      </div>
-      <div
-        id="swimlanes"
-        class="swimlanes"
-        hx-get="/tickets"
-        hx-trigger="load"
-        hx-indicator="#load-swim-spinner"
-        hx-swap="outerHTML"
-      >
-        <div class="swimlanes__lane"></div>
-        <div class="swimlanes__lane"></div>
-        <div class="swimlanes__lane"></div>
-        <div class="swimlanes__lane"></div>
-      </div>
-      <div id="load-swim-spinner" class="htmx-indicator">
-        <div class="lds-ring">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-    </main>
-    <div id="dialog-anchor" />
+    <h1>Backlog</h1>
   </body>
-  <script>
-    const clientID = "kRYFKmwQiKoGQegrMTTmwRpgHoRZaByz"
-    const domain = "dev-fu83rki86r8dd5bd.us.auth0.com"
-    const webAuth = new auth0.WebAuth({
-      domain,
-      clientID,
-      audience: "Todo API",
-      responseType: "token",
-      redirectUri: "http://localhost:5000/authorize.html",
-    })
-    const authToken = sessionStorage.getItem("access_token")
-
-    const login = () => {
-      webAuth.authorize()
-    }
-
-    const logout = () => {
-      sessionStorage.removeItem("access_token")
-      webAuth.logout({ returnTo: "http://localhost:5000", clientID })
-    }
-
-    const checkSession = () =>
-      new Promise((resolve, reject) =>
-        webAuth.checkSession(
-          { audience: "Todo API" },
-          function (err, authResult) {
-            if (err) reject(err)
-            else resolve(authResult)
-          }
-        )
-      )
-
-    function isTokenExpired(token) {
-      const decodedToken = JSON.parse(atob(token.split(".")[1]))
-      const expirationTime = decodedToken.exp * 1000 // Convert expiration time to milliseconds
-
-      return Date.now() >= expirationTime
-    }
-
-    // document.body.addEventListener("htmx:confirm", (e) => {
-    //   const authToken = sessionStorage.getItem('access_token')
-    //   if(!authToken || isTokenExpired(authToken)) {
-    //     e.preventDefault()
-    //
-    //     webAuth.checkSession()
-    //       .then(token => sessionStorage.setItem('access_token', token))
-    //       .then(() => e.detail.issueRequest())
-    //       .catch(() => login())
-    //   }
-    // })
-    //
-    // document.body.addEventListener('htmx:configRequest', function(evt) {
-    //   const authToken = sessionStorage.getItem("access_token")
-    //
-    //   evt.detail.headers['Authorization'] = `Bearer ${authToken}` // add a new parameter into the mix
-    // });
-  </script>
 </html>
