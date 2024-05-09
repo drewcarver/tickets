@@ -13,10 +13,12 @@ open Giraffe
 open Giraffe.EndpointRouting
 open Giraffe.ViewEngine
 
-//let notLoggedIn =
-//    RequestErrors.UNAUTHORIZED "Token" "Auth0" "You must be logged in."
+let notLoggedIn =
+    div [] [ 
+      script [ _src "./login.js"] [] 
+    ] |> MainPage.mainPage |> htmlView
 
-//let mustBeLoggedIn = requiresAuthentication notLoggedIn
+let mustBeLoggedIn = requiresAuthentication notLoggedIn
 
 let notFoundHandler: HttpHandler = "Not Found" |> text |> RequestErrors.notFound
 
@@ -27,7 +29,7 @@ let endpoints =
     [ 
       GET [ route "/" (htmlView Pages.Board.ticketBoard) ]
       GET [ route "/index.html" (htmlView Pages.Board.ticketBoard) ]
-      GET [ route "/backlog.html" (htmlView Pages.Backlog.backlog) ]
+      GET [ route "/backlog.html" (mustBeLoggedIn >=> htmlView Pages.Backlog.backlog) ]
       POST [ route "/tickets" Ticket.addTicket ]
       PUT [ route "/tickets" Ticket.editTicket ]
       GET [ route "/tickets" Ticket.listTickets ]
@@ -42,15 +44,16 @@ let configureApp (appBuilder: IApplicationBuilder) =
         .UseGiraffe(notFoundHandler)
 
 let configureServices (services: IServiceCollection) =
-    services.AddRouting().AddGiraffe()
-    (*.AddAuthorization()
+    services
+      .AddRouting()
+      .AddGiraffe()
+      .AddAuthorization()
         .AddAuthentication(fun o ->
             o.DefaultAuthenticateScheme <- JwtBearerDefaults.AuthenticationScheme
             o.DefaultChallengeScheme <- JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(fun o ->
             o.Authority <- sprintf "https://%s/" domain
             o.Audience <- "Todo API")
-        *)
     |> ignore
 
 [<EntryPoint>]
@@ -60,8 +63,7 @@ let main args =
 
     let app = builder.Build()
 
-    //app.UseAuthentication().UseAuthorization() |> ignore
-
+    app.UseAuthentication().UseAuthorization() |> ignore
 
     if app.Environment.IsDevelopment() then
         app.UseDeveloperExceptionPage() |> ignore

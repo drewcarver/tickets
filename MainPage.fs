@@ -59,7 +59,7 @@ let appBody (content: XmlNode) =
             ] 
           ]
           div [ _class "main-menu__user-profile" ] [ 
-            img [ _alt "User Avatar"; _class "avatar"; _src "/Avatar.png" ]
+            img [ _alt "User Avatar"; _class "avatar"; _src "/Avatar.png"; attr "hx-on:click" "logout()" ]
             div [ _class "team-profile__description" ] [ 
               p [ _class "team-profile__team-name" ] [ str "Andrew Carver" ]
               p [ _class "team-profile__team-type" ] [ str "drew.carver@outlook.com" ] 
@@ -105,5 +105,7 @@ let mainPage (content: XmlNode) =
                       _rel "stylesheet" ]
                 link [ _rel "stylesheet"; _href "/LoadingSpinner.css" ]
                 link [ _rel "stylesheet"; _href "/index.css" ] ]
-          (appBody content) ]
+          (appBody content) 
+          script [ _src "./htmxAuthConfig.js" ] []
+          ]
 
