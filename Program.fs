@@ -15,7 +15,7 @@ open Giraffe.ViewEngine
 
 let notLoggedIn =
     div [] [ 
-      script [ _src "./login.js"] [] 
+      script [] [ str "login()"] 
     ] |> MainPage.mainPage |> htmlView
 
 let mustBeLoggedIn = requiresAuthentication notLoggedIn
