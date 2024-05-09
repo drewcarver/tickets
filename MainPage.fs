@@ -15,7 +15,7 @@ let appBody (content: XmlNode) =
         div [ _class "main-menu" ] [ 
           div [ _class "main-menu__team-profile" ] [ 
             img [ _alt "Team Avatar"; _class "avatar"; _src "/Avatar.png" ]
-            div [ _class "team_profile__description" ] [ 
+            div [ _class "team-profile__description" ] [ 
               p [ _class "team-profile__team-name" ] [ str "Teams in Space" ]
               p [ _class "team-profile__team-type" ] [ str "Software Project" ] 
             ] 
