@@ -11,6 +11,7 @@ let ticketBoard=
           _type "search" 
           _name "title" 
           _placeholder "Search" 
+          _class "board-search"
           attr "hx-get" "tickets"
           attr "hx-trigger" "search, keyup delay:200ms changed"
           attr "hx-target" ".swimlanes"

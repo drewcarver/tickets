@@ -260,3 +260,7 @@ input {
     background-color: rgba(0, 80, 192, 0.8);
   }
 }
+
+.board-search {
+  margin-right: 1rem;
+}
