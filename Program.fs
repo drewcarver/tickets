@@ -27,6 +27,7 @@ let endpoints =
     [ POST [ route "/tickets" Todo.addTicket ]
       PUT [ route "/tickets" Todo.editTicket ]
       GET [ route "/tickets" Todo.listTickets ]
+      GET [ route "/ticketapp.html" Todo.mainA ]
       GET [ route "/show-add-dialog" Todo.showAddTicketDialog ]
       GET [ routef "/show-edit-dialog/%i" (fun ticketId -> Todo.showEditTicketDialog ticketId) ] ]
 
