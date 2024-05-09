@@ -31,7 +31,7 @@ type TicketDTO =
       description: string
       status: int }
 
-type Ticket = sql.dataContext.``Ticket.TicketEntity``
+type Ticket = sql.dataContext.``ticket.ticketEntity``
 
 let createTicket (ticket: TicketDTO) =
     let createdTicket = ctx.Ticket.Ticket.Create()

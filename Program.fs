@@ -24,12 +24,15 @@ let clientId = "kRYFKmwQiKoGQegrMTTmwRpgHoRZaByz"
 let domain = "dev-fu83rki86r8dd5bd.us.auth0.com"
 
 let endpoints =
-    [ POST [ route "/tickets" Todo.addTicket ]
-      PUT [ route "/tickets" Todo.editTicket ]
-      GET [ route "/tickets" Todo.listTickets ]
-      GET [ route "/ticketapp.html" Todo.mainA ]
-      GET [ route "/show-add-dialog" Todo.showAddTicketDialog ]
-      GET [ routef "/show-edit-dialog/%i" (fun ticketId -> Todo.showEditTicketDialog ticketId) ] ]
+    [ 
+      GET [ route "/" (htmlView Pages.Board.ticketBoard) ]
+      GET [ route "/index.html" (htmlView Pages.Board.ticketBoard) ]
+      GET [ route "/backlog.html" (htmlView Pages.Backlog.backlog) ]
+      POST [ route "/tickets" Ticket.addTicket ]
+      PUT [ route "/tickets" Ticket.editTicket ]
+      GET [ route "/tickets" Ticket.listTickets ]
+      GET [ route "/show-add-dialog" Ticket.showAddTicketDialog ]
+      GET [ routef "/show-edit-dialog/%i" (fun ticketId -> Ticket.showEditTicketDialog ticketId) ] ]
 
 let configureApp (appBuilder: IApplicationBuilder) =
     appBuilder
