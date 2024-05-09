@@ -7,7 +7,7 @@ let resolutionPath = "/home/drew/Downloads/mysql-connector/net8.0"
 
 [<Literal>]
 let connectionString =
-    "Data Source=localhost;Initial Catalog=TICKET;User ID=ticketapp;Password=ticket123"
+    "Data Source=localhost;Initial Catalog=Ticket;User ID=ticketapp;Password=ticket123"
 
 type sql =
     SqlDataProvider<ConnectionString=connectionString, DatabaseVendor=Common.DatabaseProviderTypes.MYSQL, ResolutionPath=resolutionPath>
@@ -31,7 +31,7 @@ type TicketDTO =
       description: string
       status: int }
 
-type Ticket = sql.dataContext.``ticket.ticketEntity``
+type Ticket = sql.dataContext.``Ticket.TicketEntity``
 
 let createTicket (ticket: TicketDTO) =
     let createdTicket = ctx.Ticket.Ticket.Create()
