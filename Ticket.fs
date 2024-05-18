@@ -48,12 +48,6 @@ let listTickets: HttpHandler =
                 )
         }
 
-let showToast: HttpHandler =
-    htmlView (div [_class "toast"; attr "remove-me" "3s" ] [ 
-      h2 [] [ str "Hello Toast" ]; 
-      p [] [ str "This is an example toast." ] 
-    ])
-
 let addTicket: HttpHandler =
     fun _ ctx ->
         task {

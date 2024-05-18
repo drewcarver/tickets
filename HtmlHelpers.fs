@@ -24,6 +24,17 @@ let updateDialogDiv =
           attr "hx-swap" "outerHTML" ]
         []
 
+let createToast title message = 
+    div [
+      _class "toast" 
+      attr "remove-me" "3s" 
+    ] [ 
+      div [ _class "toast__body" ] [
+        h2 [] [ str title ]; 
+        p [] [ str message ] 
+      ]
+      div [ _class "toast__progress-bar" ] []
+    ]
 
 let toDialog title innerContent =
     dialog
