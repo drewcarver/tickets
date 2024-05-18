@@ -70,6 +70,7 @@ let appBody (content: XmlNode) =
       ] 
       content 
       div [_id "dialog-anchor"] []
+      div [_id "toast-anchor"; attr "hx-ext" "remove-me" ] []
     ]
 
 let mainPage (content: XmlNode) =
@@ -87,6 +88,8 @@ let mainPage (content: XmlNode) =
                       _crossorigin "anonymous" ]
                     []
                 script [ _src "https://cdn.auth0.com/js/auth0/9.18/auth0.min.js" ] []
+
+                script [ _src "https://unpkg.com/htmx.org@1.9.12/dist/ext/remove-me.js" ] []
                 link [ _rel "preconnect"; _href "https://fonts.googleapis.com" ]
                 link [ _rel "preconnect"; _href "https://fonts.gstatic.com"; _crossorigin "" ]
                 link

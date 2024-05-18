@@ -27,6 +27,7 @@ let domain = "dev-fu83rki86r8dd5bd.us.auth0.com"
 
 let endpoints =
     [ 
+      POST [ route "/show-toast" Ticket.showToast ]
       GET [ route "/" (htmlView Pages.Board.ticketBoard) ]
       GET [ route "/index.html" (htmlView Pages.Board.ticketBoard) ]
       GET [ route "/backlog.html" (mustBeLoggedIn >=> htmlView Pages.Backlog.backlog) ]

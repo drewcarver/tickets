@@ -264,3 +264,37 @@ input {
 .board-search {
   margin-right: 1rem;
 }
+
+#toast-anchor {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  top: 1rem;
+  right: 1rem;
+}
+
+.toast {
+  width: 200px;
+  background-color: green;
+  padding: 1rem;
+  color: white;
+  border-radius: 15px;
+  animation: fadeInFromTop .20s ease-in forwards;
+
+  & p, h2 {
+    margin: 0;
+  }
+}
+
+@keyframes fadeInFromTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
