@@ -25,14 +25,6 @@ let ticketBoard=
         ] [
           i [_class "fa fa-plus"] []
         ]
-        button [
-          _class "btn"
-          attr "hx-post" "/show-toast"
-          attr "hx-target" "#toast-anchor"
-          attr "hx-swap" "afterbegin"
-        ] [
-          str "Show Toast"
-        ]
       ]
       div [_class "swimlane-titles"] [
         h2 [] [str "Ready"]

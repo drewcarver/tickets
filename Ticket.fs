@@ -65,7 +65,7 @@ let editTicket: HttpHandler =
 
             let! _ = updateTicket (ticket) ticket.ticketId
 
-            return! ctx.WriteHtmlViewAsync updateDialogDiv
+            return! ctx.WriteHtmlViewAsync (html [] [ createToast "Ticket Updated" "Your ticket was successfully updated."; updateDialogDiv ] )
         }
 
 let showEditTicketDialog ticketId : HttpHandler =

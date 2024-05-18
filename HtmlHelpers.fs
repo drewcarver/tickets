@@ -25,16 +25,18 @@ let updateDialogDiv =
         []
 
 let createToast title message = 
-    div [
-      _class "toast" 
-      attr "remove-me" "3s" 
-    ] [ 
-      div [ _class "toast__body" ] [
-        h2 [] [ str title ]; 
-        p [] [ str message ] 
-      ]
-      div [ _class "toast__progress-bar" ] []
+    div [ attr "hx-swap-oob" "afterbegin:#toast-anchor" ] [
+      div [
+        // attr "remove-me" "3s" 
+        _class "toast" 
+      ] [ 
+        div [ _class "toast__body" ] [
+          h3 [] [ str title ]
+          p [] [ str message ] 
+        ]
+        div [ _class "toast__progress-bar" ] []
     ]
+  ]
 
 let toDialog title innerContent =
     dialog

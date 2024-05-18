@@ -272,19 +272,25 @@ input {
   gap: 1rem;
   top: 1rem;
   right: 1rem;
+  overflow: hidden;
 }
 
 .toast {
-  width: 200px;
+  width: 300px;
   background-color: green;
   color: white;
   border-radius: 15px;
-  animation: fadeInFromTop .20s ease-in forwards;
-
-  & p, h2 {
-    margin: 0;
-  }
+  animation: fadeInFromTop .20s ease-in forwards, .20s linear 3s forwards dismiss;
   overflow: hidden;
+
+  &:hover .toast__progress-bar {
+    animation-play-state: paused;
+  }
+
+  & p, h3 {
+    margin: 0;
+    line-height: 1.5rem;
+  }
 }
 
 .toast__body {
@@ -296,6 +302,17 @@ input {
   height: 5px;
   background-color: blue;
   animation: toastprogress 3s linear;
+}
+
+@keyframes dismiss {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
 }
 
 @keyframes toastprogress {
