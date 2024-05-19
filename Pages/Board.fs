@@ -26,12 +26,6 @@ let ticketBoard=
           i [_class "fa fa-plus"] []
         ]
       ]
-      div [_class "swimlane-titles"] [
-        h2 [] [str "Ready"]
-        h2 [] [str "In Progress"]
-        h2 [] [str "Testing"]
-        h2 [] [str "Done"]
-      ]
       div [
         _id "swimlanes"
         _class "swimlanes"

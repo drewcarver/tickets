@@ -96,6 +96,12 @@ main {
   display: flex;
 }
 
+.swimlanes__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .swimlanes__lane {
   width: 25%;
   display: flex;
@@ -124,6 +130,15 @@ main {
   border-radius: 8px;
   padding: 20px;
   transition: transform 0.5s;
+  min-width: 200px;
+
+  & p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+  }
 }
 
 .card:hover {
@@ -302,6 +317,37 @@ input {
   height: 5px;
   background-color: blue;
   animation: toastprogress 3s linear;
+}
+
+@media screen and (max-width: 1300px) {
+  .card {
+    width: 200px;
+    height: 200px;
+
+  }
+
+  .swimlanes {
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .swimlanes__lane {
+    flex-direction: row;
+    overflow: auto;
+    flex-wrap: wrap;
+    width: 100%;
+
+    & h2 {
+      width: 100%;
+    }
+  }
+
+  .swimlanes__cards {
+    flex-direction: row;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
 }
 
 @keyframes dismiss {

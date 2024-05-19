@@ -41,10 +41,10 @@ let listTickets: HttpHandler =
                 ctx.WriteHtmlViewAsync(
                     div
                         [ _class "swimlanes" ]
-                        [ div [ _class "swimlanes__lane" ] readyCards
-                          div [ _class "swimlanes__lane" ] inProgressCards
-                          div [ _class "swimlanes__lane" ] testingCards
-                          div [ _class "swimlanes__lane" ] doneCards ]
+                        [ div [ _class "swimlanes__lane" ] [h2 [] [ str "Ready" ]; div [ _class "swimlanes__cards" ] readyCards]
+                          div [ _class "swimlanes__lane" ] [h2 [] [ str "In Progress" ]; div [ _class "swimlanes__cards" ] inProgressCards]
+                          div [ _class "swimlanes__lane" ] [h2 [] [ str "Testing" ]; div [ _class "swimlanes__cards" ] testingCards]
+                          div [ _class "swimlanes__lane" ] [h2 [] [ str "Done" ]; div [ _class "swimlanes__cards" ] doneCards] ]
                 )
         }
 
