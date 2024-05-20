@@ -9,7 +9,8 @@ let appBody (content: XmlNode) =
           span [] [ str "Logo" ]
           div [ _class "main-header__actions" ] [ 
             i [ _class "bx bx-plus bx-md" ] [] 
-            i [ _class "bx bxs-grid bx-md" ] [] 
+            label [ _for "menu-checkbox"] [ i [ _class "bx bxs-grid bx-md" ] [] ]
+            input [ _id "menu-checkbox"; _type "checkbox" ] 
           ] 
         ]
         div [ _class "main-menu" ] [ 

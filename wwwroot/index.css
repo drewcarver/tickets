@@ -15,6 +15,7 @@ select {
 
 body {
   display: flex;
+  flex-wrap: wrap;
   min-height: 100vh;
   margin: 0;
 }
@@ -319,7 +320,33 @@ input {
   animation: toastprogress 3s linear;
 }
 
+#menu-checkbox {
+  display: none;
+}
+
 @media screen and (max-width: 1300px) {
+  body {
+    flex-direction: column;
+  }
+
+  .main-menu {
+    display: none;
+  }
+
+  main {
+    overflow: visible;
+    width: 100%;
+  }
+
+  nav:has(#menu-checkbox:checked) .main-menu {
+    display: block;
+  }
+
+  nav:has(#menu-checkbox:checked) {
+    position: absolute;
+    height: 100%;
+  }
+
   .card {
     width: 200px;
     height: 200px;
@@ -334,8 +361,9 @@ input {
 
   .swimlanes__lane {
     flex-direction: row;
-    overflow: auto;
     flex-wrap: wrap;
+    gap: 0;
+    flex: 1;
     width: 100%;
 
     & h2 {
@@ -345,7 +373,7 @@ input {
 
   .swimlanes__cards {
     flex-direction: row;
-    margin-bottom: 1rem;
+    overflow: auto;
     gap: 1rem;
   }
 }
