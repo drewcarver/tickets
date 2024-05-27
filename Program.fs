@@ -31,7 +31,7 @@ let endpoints =
       GET [ route "/index.html" (htmlView Pages.Board.ticketBoard) ]
       GET [ route "/backlog.html" (mustBeLoggedIn >=> htmlView Pages.Backlog.backlog) ]
       POST [ route "/tickets" Ticket.addTicket ]
-      PUT [ route "/tickets" Ticket.editTicket ]
+      PUT [ routef "/tickets/%i" (fun ticketId -> Ticket.editTicket ticketId)]
       GET [ route "/tickets" Ticket.listTickets ]
       GET [ route "/show-add-dialog" Ticket.showAddTicketDialog ]
       GET [ routef "/show-edit-dialog/%i" (fun ticketId -> Ticket.showEditTicketDialog ticketId) ] ]

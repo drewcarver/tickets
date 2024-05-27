@@ -3,9 +3,6 @@ module HtmlHelpers
 open TodoRepo
 open Giraffe.ViewEngine
 
-
-
-
 let ticketStatusMap =
     [ "Ready", int TicketStatus.Ready
       "In Progress", int TicketStatus.InProgress
@@ -27,7 +24,7 @@ let updateDialogDiv =
 let createToast title message = 
     div [ attr "hx-swap-oob" "afterbegin:#toast-anchor" ] [
       div [
-        // attr "remove-me" "3s" 
+        attr "remove-me" "3s" 
         _class "toast" 
       ] [ 
         div [ _class "toast__body" ] [
@@ -90,34 +87,3 @@ let toSelect attrs values (selectedValue: string option) =
                 [ str key ])
 
     select attrs options
-
-let editTicketForm (ticket: Ticket) =
-    form
-        [ attr "hx-put" "/tickets"
-          _class "ticket-form"
-          _formmethod "dialog"
-          attr "hx-indicator" "#save-ticket-spinner"
-          attr "hx-target" "#dialog-anchor"
-          attr "hx-swap" "outerHTML" ]
-        [ input [ _hidden; _name "ticketId"; _value (string ticket.TicketId) ]
-          input [ _required; _name "title"; _placeholder "Title"; _value ticket.Title ]
-          input
-              [ _required
-                _name "description"
-                _placeholder "Description"
-                _value ticket.Description ]
-          toSelect [ _name "status" ] statusKeyValuePairs (string ticket.Status |> Some)
-          button [ _type "submit"; _class "btn save-btn" ] [ str "Save" ] ]
-
-let addTicketForm =
-    form
-        [ attr "hx-post" "/tickets"
-          _class "ticket-form"
-          _formmethod "dialog"
-          attr "hx-indicator" "#save-ticket-spinner"
-          attr "hx-target" "#dialog-anchor"
-          attr "hx-swap" "outerHTML" ]
-        [ input [ _required; _name "title"; _placeholder "Title" ]
-          input [ _required; _name "description"; _placeholder "Description" ]
-          toSelect [ _name "status" ] statusKeyValuePairs None
-          button [ _type "submit"; _class "btn save-btn" ] [ str "Save" ] ]

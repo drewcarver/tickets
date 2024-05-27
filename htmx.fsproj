@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="ResultBuilder.fs" />
+    <Compile Include="NonEmptyString.fs" />
     <Compile Include="TicketRepo.fs" />
     <Compile Include="HtmlHelpers.fs" />
     <Compile Include="MainPage.fs" />
