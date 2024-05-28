@@ -1,6 +1,9 @@
 module TodoRepo
 
 open FSharp.Data.Sql
+open NonEmptyString
+open ResultBuilder
+
 
 [<Literal>]
 let resolutionPath = "/home/drew/Downloads/mysql-connector/net8.0"
@@ -26,17 +29,42 @@ type TicketFilter =
 
 [<CLIMutable>]
 type TicketDTO =
-    { ticketId: int
-      title: string
-      description: string
+    {
+      title: string option
+      description: string option
+      status: int option }
+    static member Default = 
+      { 
+        title = Some ""
+        description = Some ""
+        status = None
+      }
+
+type ValidTicket = 
+    { 
+      title: NonEmptyString
+      description: NonEmptyString
       status: int }
 
-type Ticket = sql.dataContext.``Ticket.TicketEntity``
+let createValidTicket (ticket: TicketDTO): Result<ValidTicket, string> = 
+    result {
+      let! title = ticket.title |> createNonEmptyString "Title" 
+      let! description = ticket.description|> createNonEmptyString "Description"
 
-let createTicket (ticket: TicketDTO) =
+      return {
+        title = title
+        description = description
+        status = Option.defaultValue 1 ticket.status
+      }
+    }
+
+     
+type Ticket = sql.dataContext.``ticket.ticketEntity`` 
+
+let createTicket (ticket: ValidTicket) =
     let createdTicket = ctx.Ticket.Ticket.Create()
-    createdTicket.Title <- ticket.title
-    createdTicket.Description <- ticket.description
+    createdTicket.Title <- value ticket.title
+    createdTicket.Description <- value ticket.description
     createdTicket.Status <- ticket.status
 
     ctx.SubmitUpdatesAsync()
@@ -63,10 +91,10 @@ let getTickets (filter: TicketFilter) : List<Ticket> =
     }
     |> Seq.toList
 
-let updateTicket (ticket: TicketDTO) ticketId =
+let updateTicket (ticket: ValidTicket) ticketId =
     let existingTicket = getTicket ticketId
-    existingTicket.Title <- ticket.title
-    existingTicket.Description <- ticket.description
+    existingTicket.Title <- value ticket.title
+    existingTicket.Description <- value ticket.description
     existingTicket.Status <- ticket.status
 
     ctx.SubmitUpdatesAsync()

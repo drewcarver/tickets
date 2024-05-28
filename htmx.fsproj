@@ -6,8 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="ResultBuilder.fs" />
+    <Compile Include="NonEmptyString.fs" />
     <Compile Include="TicketRepo.fs" />
     <Compile Include="HtmlHelpers.fs" />
+    <Compile Include="MainPage.fs" />
+    <Compile Include="Pages/Board.fs" />
+    <Compile Include="Pages/Backlog.fs" />
     <Compile Include="Ticket.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

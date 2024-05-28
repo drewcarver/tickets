@@ -1,14 +1,6 @@
-module Todo
+module Ticket
 
-open System
-open Microsoft.AspNetCore
-open Microsoft.AspNetCore.Builder
-open Microsoft.AspNetCore.Hosting
-open Microsoft.AspNetCore.Http
-open Microsoft.Extensions.DependencyInjection
-open Microsoft.Extensions.Hosting
 open Giraffe
-open Giraffe.EndpointRouting
 open Giraffe.ViewEngine
 open TodoRepo
 open HtmlHelpers
@@ -41,37 +33,102 @@ let listTickets: HttpHandler =
                 ctx.WriteHtmlViewAsync(
                     div
                         [ _class "swimlanes" ]
-                        [ div [ _class "swimlanes__lane" ] readyCards
-                          div [ _class "swimlanes__lane" ] inProgressCards
-                          div [ _class "swimlanes__lane" ] testingCards
-                          div [ _class "swimlanes__lane" ] doneCards ]
+                        [ div [ _class "swimlanes__lane" ] [h2 [] [ str "Ready" ]; div [ _class "swimlanes__cards" ] readyCards]
+                          div [ _class "swimlanes__lane" ] [h2 [] [ str "In Progress" ]; div [ _class "swimlanes__cards" ] inProgressCards]
+                          div [ _class "swimlanes__lane" ] [h2 [] [ str "Testing" ]; div [ _class "swimlanes__cards" ] testingCards]
+                          div [ _class "swimlanes__lane" ] [h2 [] [ str "Done" ]; div [ _class "swimlanes__cards" ] doneCards] ]
                 )
         }
 
-let addTicket: HttpHandler =
-    fun _ ctx ->
-        task {
-            let! ticket = ctx.BindFormAsync<TicketDTO>()
+type TicketFormProps = 
+    | Add of ErrorMessage: string option * Ticket: TicketDTO
+    | Edit of ErrorMessage: string option * Ticket: TicketDTO * TicketId: int
+    member x.ErrorMessage = x |> function
+      | Add (ErrorMessage=message) 
+      | Edit (ErrorMessage=message) -> message
+    member x.Ticket = x |> function
+      | Add (Ticket=ticket) 
+      | Edit (Ticket=ticket) -> ticket
 
-            let! _ = createTicket (ticket)
+let empty : XmlNode = Text ""
 
-            return! ctx.WriteHtmlViewAsync updateDialogDiv
-        }
+let ticketForm (props: TicketFormProps) =
+    let saveAttr = 
+      match props with 
+        | Add _ -> attr "hx-post" "/tickets" 
+        | Edit (TicketId=ticketId) -> attr "hx-put" (sprintf "/tickets/%i" ticketId)
 
-let editTicket: HttpHandler =
-    fun _ ctx ->
-        task {
-            let! ticket = ctx.BindFormAsync<TicketDTO>()
+    let defaultEmpty = Option.defaultValue ""
 
-            let! _ = updateTicket (ticket) ticket.ticketId
-
-            return! ctx.WriteHtmlViewAsync updateDialogDiv
-        }
+    form
+        [ saveAttr 
+          _class "ticket-form"
+          _formmethod "dialog"
+          attr "hx-indicator" "#save-ticket-spinner"
+          attr "hx-target" "#dialog-anchor"
+          attr "hx-swap" "innerHTML" ]
+        [ 
+          match props.ErrorMessage with 
+            | Some message -> div [] [str message]
+            | None -> empty
+          input [ _required; _name "title"; _placeholder "Title"; _value (defaultEmpty props.Ticket.title) ]
+          input [  _name "description"; _placeholder "Description"; _value (defaultEmpty props.Ticket.description) ]
+          toSelect [ _name "status" ] statusKeyValuePairs (string props.Ticket.status |> Some)
+          button [ _type "submit"; _class "btn save-btn" ] [ str "Save" ] ]
 
 let showEditTicketDialog ticketId : HttpHandler =
     let ticket = getTicket ticketId
 
-    htmlView (editTicketForm ticket |> toDialog "Edit Ticket")
+    let ticketDTO: TicketDTO = {
+      title = Some ticket.Title
+      description = Some ticket.Description
+      status = Some ticket.Status
+    }
+    let ticketForm = ticketForm (Edit(None, ticketDTO, ticketId))
+
+    htmlView (ticketForm |> toDialog "Edit Ticket")
 
 let showAddTicketDialog: HttpHandler =
-    htmlView (addTicketForm |> toDialog "Add Ticket")
+    let ticketForm = ticketForm (Add(None, TicketDTO.Default))
+    htmlView (ticketForm |> toDialog "Add Ticket")
+
+let addTicket: HttpHandler =
+    fun _ ctx ->
+        let saveChanges validTicket = 
+          task {
+            do! createTicket validTicket 
+            return! ctx.WriteHtmlViewAsync (html [] [ createToast "Ticket Saved" "Your ticket was successfully saved."; updateDialogDiv ])
+          }
+
+        task {
+            let! ticket = ctx.BindFormAsync<TicketDTO>() 
+            let result = createValidTicket ticket 
+
+
+            let ticketForm message = ticketForm (Add(Some message, ticket))
+
+            return! match result with
+                      | Ok result -> saveChanges result
+                      | Error message -> 
+                          ctx.WriteHtmlViewAsync (ticketForm message |> toDialog "Add Ticket")
+        }
+
+let editTicket ticketId: HttpHandler =
+    fun _ ctx ->
+        let saveChanges validTicket = 
+          task {
+            do! updateTicket validTicket ticketId 
+            return! ctx.WriteHtmlViewAsync (html [] [ createToast "Ticket Updated" "Your ticket was successfully updated."; updateDialogDiv ])
+          }
+
+        task {
+            let! ticket = ctx.BindFormAsync<TicketDTO>() 
+            let result = createValidTicket ticket 
+
+            let ticketForm message = ticketForm (Edit(Some message, ticket, ticketId))
+
+            return! match result with
+                      | Ok result -> saveChanges result
+                      | Error message -> 
+                          ctx.WriteHtmlViewAsync (ticketForm message |> toDialog "Edit Ticket")
+        }
