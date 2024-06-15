@@ -3,6 +3,11 @@ module TodoRepo
 open FSharp.Data.Sql
 open NonEmptyString
 open ResultBuilder
+open System.Data.SQLite
+open Dapper.FSharp.MySQL
+open Dapper.FSharp.SQLite
+open DbRecords.Ticket
+open System.Data
 
 
 [<Literal>]
@@ -16,6 +21,18 @@ type sql =
     SqlDataProvider<ConnectionString=connectionString, DatabaseVendor=Common.DatabaseProviderTypes.MYSQL, ResolutionPath=resolutionPath>
 
 let ctx = sql.GetDataContext()
+
+let ticketTable = table<Ticket>
+
+let mysqlConnection: IDbConnection = new MySql.Data.MySqlClient.MySqlConnection("Data Source=localhost;Initial Catalog=Ticket;User ID=ticketapp;Password=ticket123")
+let sqliteConnection: IDbConnection = new SQLite.SQLiteConnection("Data Source=./ticket.db;Version=3;New=True;")
+
+let isTest = Config.appConfig.IsTest
+
+let connection isUnitTest = 
+  if isTest
+    then sqliteConnection 
+    else mysqlConnection
 
 type TicketStatus =
     | Ready = 1
@@ -78,18 +95,16 @@ let getTicket ticketId =
     }
     |> Seq.head
 
-let getTickets (filter: TicketFilter) : List<Ticket> =
-    let doesNotHaveStatus = filter.status.IsNone
-    let doesNotHaveTitle = filter.title.IsNone
+let getTicketsQuery (filter: TicketFilter) =
+    select {
+      for ticket in ticketTable do
+      andWhereIf filter.status.IsSome (ticket.Status = filter.status.Value)
+      andWhereIf filter.title.IsSome (ticket.Title.Contains(filter.title.Value))
+    } 
 
-    query {
-        for ticket in ctx.Ticket.Ticket do
-            where (doesNotHaveStatus || ticket.Status = filter.status.Value)
-            where (doesNotHaveTitle || ticket.Title.Contains(filter.title.Value))
-
-            select ticket
-    }
-    |> Seq.toList
+let getTickets (filter: TicketFilter) =
+    getTicketsQuery(filter) 
+    |> connection(false).SelectAsync<DbRecords.Ticket.Ticket> 
 
 let updateTicket (ticket: ValidTicket) ticketId =
     let existingTicket = getTicket ticketId

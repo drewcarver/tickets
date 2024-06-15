@@ -54,7 +54,7 @@ let toDialog title innerContent =
               [ div [ _class "lds-ring" ] [ div [] []; div [] []; div [] []; div [] [] ]
                 p [] [ str "Saving changes..." ] ] ]
 
-let toCard (ticket: Ticket) =
+let toCard (ticket: DbRecords.Ticket.Ticket) =
     div
         [ _class "card"
           _id $"ticket_{ticket.TicketId}"

@@ -14,7 +14,8 @@ let listTickets: HttpHandler =
 
             let filter: TicketFilter = { title = title; status = status }
 
-            let groupedTickets = getTickets filter |> List.groupBy (fun t -> t.Status)
+            let! filteredTickets = getTickets filter
+            let groupedTickets =  filteredTickets |> Seq.toList |> List.groupBy (fun t -> t.Status)
 
             let getTicketCardsByStatus status =
                 groupedTickets
